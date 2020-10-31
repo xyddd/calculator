@@ -1,0 +1,46 @@
+.dispaly {
+    width: 100%;
+    height: 100px;
+    color: white;
+    font-size: 30px;
+    text-align: left;
+    background-color: black;
+}
+
+.dispaly:before {
+    content: "";
+    display: inline-block;
+    vertical-align: middle;
+    padding: 0 10px;
+    height: 100%;
+}
+
+
+.key {
+    width: 25%;
+    height: 80px;
+    cursor: pointer;
+    font-size: 30px;
+    background-color: rgb(238, 238, 238);
+}
+
+.key:hover {
+    background-color: rgb(189, 189, 189);
+}
+
+.largeKey {
+    width: 50%;
+    height: 80px;
+    cursor: pointer;
+    font-size: 30px;
+    background-color: rgb(238, 238, 238);
+}
+
+.largeKey:hover {
+    background-color: rgb(189, 189, 189);
+}
+
+.error {
+    margin-top: 20px;
+    color: red;
+}

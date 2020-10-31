@@ -1,0 +1,18 @@
+.main {
+    height: 100%;
+    margin-bottom: 30px;
+}
+
+.leftPart {
+    float: left;
+    width: 50%;
+}
+
+.rightPart {
+    float:right;
+    width: 50%;
+}
+
+.content {
+    padding: 20px;
+}
