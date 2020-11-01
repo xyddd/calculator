@@ -19,11 +19,11 @@ const Login = (props) => {
             <div className="login">&nbsp;</div>
             <div className="login">
                 <div className="loginTitle">
-                    LOG IN
+                    Portal
                 </div>
                 <div className="loginText">
                     <span><input className="loginInput" type="text" placeholder="Enter Your Name..." onChange={onChange} value={user}/></span>
-                    <span><button className="loginSubmit" type="loginSubmit" onClick={onSumbit}>Submit</button></span>
+                    <span><button className="loginSubmit" type="loginSubmit" onClick={onSumbit}>GO!</button></span>
                 </div>
             </div>
             <div className="login"></div>

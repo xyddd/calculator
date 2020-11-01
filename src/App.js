@@ -10,7 +10,8 @@ class App extends Component {
   state = {
     log: [],
   }
-  client = new WebSocket('wss://sezzleserver.herokuapp.com');
+  
+  client = new WebSocket('wss://sezzlecalculatorxy.herokuapp.com/')
   
   componentDidMount() {
     this.client.onopen = () => {};
@@ -31,6 +32,7 @@ class App extends Component {
       user: newLog.user
     }))
   }
+
   render() {
     const { log } = this.state;
 

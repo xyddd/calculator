@@ -29,7 +29,11 @@ const History = props => {
     return (
         <div className="history">
             <Title title="Most Recent Ten Results" />
-            <Log log={props.log}/>
+            {
+                props.log.length > 0 && (
+                    <Log log={props.log}/>
+                )
+            }
         </div>
     )
 }

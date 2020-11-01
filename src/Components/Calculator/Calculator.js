@@ -165,8 +165,13 @@ class Calculator extends Component {
             formula.push(+key);
         }
         else if(formula.length === 0) {
-            this.showErrorMessgae("showFormulaError");
-            return;
+            if(key === '-' || key === '+') {
+                formula.push(key);
+            }
+            else {
+                this.showErrorMessgae("showFormulaError");
+                return;
+            }
         }
         else {
             const lastChar = formula[formula.length - 1];
