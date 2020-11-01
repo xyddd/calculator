@@ -16,7 +16,7 @@ npm install
 npm start
 ```
 
-## 🔗 Libraries
+## 🔗 Library
 
 - [React 16.13.1](https://github.com/facebook/react)
 
@@ -25,3 +25,4 @@ npm start
 - Enter the entire formula and press "="
 - Wrong input will cause error notification, e.g. ×2, 1××2, 1.2.3
 - 0 as divisor leads to infinity
+- MAX 35 digits allowed
