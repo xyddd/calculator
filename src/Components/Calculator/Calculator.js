@@ -1,5 +1,6 @@
 import React, { Component, Fragment }  from 'react';
 
+import { isDigit } from '../../utilities/utils';
 import './Calculator.css';
 
 const MAX_DIGITS = 35;
@@ -8,7 +9,7 @@ const Display = (props) => {
     const { formula } = props;
     return (
         <div className="dispaly">
-            {formula.join('')}
+            {typeof formula === 'number' ? formula : formula.join('')}
         </div>
     )
 }
@@ -45,41 +46,35 @@ const Key = (props) => {
 
 const ErrorMessage = (props) => {
     return (
-        <div className="error">Formula Error Found</div>
+        <div className="error">{props.content}</div>
     )
 }
 
 class Calculator extends Component {
     state = {
         formula: [],
-        result: 0,
         isDecimal: false,
+        showFormulaError: false,
+        showLengthError: false,
     }
 
-    isDigit = c => {
-        return '0' <= c && c <= '9';
-    }
-
-    clearErrorMessgae = () => {
-        setTimeout(() => {this.setState({showError: false});}, 2000);
-    }
-
-    showErrorMessgae = () => {
-        this.setState({showError: true});
-        clearTimeout(this.clearErrorMessgae);
-        this.clearErrorMessgae();
+    showErrorMessgae = (errorType) => {
+        this.setState({[errorType]: true});
+        setTimeout(() => {this.setState({[errorType]: false})}, 2000);
     }
 
     clear = () => {
         this.setState({
             formula: [],
-            result: 0,
             isDecimal: false,
         });
     }
 
     back = () => {
         let formula = this.state.formula;
+        if(typeof formula === 'number') {
+            return;
+        }
         if(formula.length > 0) {
             formula.pop();
             this.setState(formula);
@@ -87,13 +82,68 @@ class Calculator extends Component {
     }
 
     getResult = () => {
-        const formula = this.state.formula;
+        let { formula } = this.state;
+        if(typeof formula === 'number') {
+            return;
+        }
+        let num = 0;
+        let prevNum = 0;
+        let prevSign = '+';
+        let res = 0;
+        formula.push('+');
+        for(let i=0; i<formula.length; ++i) {
+            const c  = formula[i];
+            if(isDigit(c)) {
+                num = + num * 10 + c;
+            }
+            else if(c === '.') {
+                i++;
+                let l = 10;
+                let d = 0;
+                while(i < formula.length && isDigit(formula[i])) {
+                    d += formula[i] / l;
+                    l *= 10;
+                    i++;
+                }
+                i--;
+                num += d;
+            }
+            else {
+                if(prevSign === '+') {
+                    res += prevNum;
+                    prevNum = num;
+                }
+                else if(prevSign === '-') {
+                    res += prevNum;
+                    prevNum = -num;
+                }
+                else if(prevSign === '×') {
+                    prevNum *= num;
+                }
+                else {
+                    prevNum /= num;
+                }
+                num = 0;
+                prevSign = c;
+            }
+        }
+        res += prevNum;
+        formula.pop();
+        formula.push(" = ");
+        formula.push(res);
+        this.props.getFormula(formula.join(''));
+        this.setState({formula: res, isDecimal: false,});
     }
 
     addDecimal = key => {
         let { formula, isDecimal } = this.state;
-        if(isDecimal) {
-            this.showErrorMessgae();
+        if(formula.length === MAX_DIGITS) {
+            this.showErrorMessgae("showLengthError");
+            return;
+        }
+
+        if(isDecimal || this.state.formula.length === 0) {
+            this.showErrorMessgae("showFormulaError");
         }
         else {
             formula.push(key);
@@ -101,27 +151,35 @@ class Calculator extends Component {
         }
     }
 
-    addNewElement = key => {
-        let formula = this.state.formula;
-        if(this.isDigit(key)) {
-            formula.push(key);
+    addNewDigit = key => {
+        let { formula } = this.state;
+        if(typeof formula === 'number') {
+            formula = [];
+        }
+        if(formula.length === MAX_DIGITS) {
+            this.showErrorMessgae("showLengthError");
+            return;
+        }
+
+        if(isDigit(key)) {
+            formula.push(+key);
         }
         else if(formula.length === 0) {
-            this.showErrorMessgae();
+            this.showErrorMessgae("showFormulaError");
             return;
         }
         else {
             const lastChar = formula[formula.length - 1];
-            if(this.isDigit(lastChar)) {
+            if(isDigit(lastChar)) {
                 formula.push(key);
                 this.setState({isDecimal: false})
             }
             else {
-                this.showErrorMessgae();
+                this.showErrorMessgae("showFormulaError");
             }
         }
         
-        this.setState(formula);
+        this.setState({formula: formula});
     }
 
     clickKey = e => {
@@ -140,17 +198,18 @@ class Calculator extends Component {
                 this.addDecimal(key);
                 break;
             default:
-                this.addNewElement(key);
+                this.addNewDigit(key);
         }
     }
     
     render() {
-        const { formula, showError } = this.state;
+        const { formula, showFormulaError, showLengthError } = this.state;
         return (
             <Fragment>
                 <Display formula={formula} />
                 <Key clickKey={this.clickKey} />
-                {showError && <ErrorMessage />}
+                {showFormulaError && <ErrorMessage content="Formula Error Found" />}
+                {showLengthError && <ErrorMessage content="Reach Max Formula Length" />}
             </Fragment>
         )
     }
