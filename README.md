@@ -2,8 +2,6 @@
 
 [View it online](https://xyddd.github.io/calculator/)
 
-Yuan Xu ( yuanxu.tst@gmail.com )
-
 ## 📦 Install
 
 ```bash
